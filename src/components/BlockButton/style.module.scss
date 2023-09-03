@@ -1,0 +1,31 @@
+.btnBlock{
+    height: 24px;
+    width: 24px;
+    border-radius: 4px;
+    border: 1px solid rgb(73, 73, 73);
+    &:active{
+        background-color: red;
+    }
+    &:disabled{
+        background-color: rgb(148, 148, 148);
+    }
+}
+
+.btnWall{
+    height: 24px;
+    width: 24px;
+    border-radius: 4px;
+    border: 1px solid rgb(73, 73, 73);
+    &:disabled{
+        background-color: rgb(0, 0, 0);
+    }
+}
+
+.btnActived{
+    height: 24px;
+    width: 24px;
+    border-radius: 4px;
+    border: 1px solid rgb(73, 73, 73);
+    background-color: red;
+   
+}
