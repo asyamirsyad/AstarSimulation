@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BlockButton from "../BlockButton";
 
 function shuffleArray(array) {
@@ -7,6 +7,7 @@ function shuffleArray(array) {
     const j = Math.floor(Math.random() * (i + 1));
     [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
   }
+
   return newArray;
 }
 
@@ -16,61 +17,63 @@ const Grid = ({
   numActive = 0,
   activePositions = [],
   deactivatePositions = false,
+  onChangeValue = () => {},
+  getWallPositions = () => {},
 }) => {
-  const numRows = row;
-  const numColumns = col;
+  const [shuffledPositions, setShuffledPositions] = useState([]);
 
-  // Generate all possible positions in the grid
-  const allPositions = [];
-  for (let rowIndex = 0; rowIndex < numRows; rowIndex++) {
-    for (let colIndex = 0; colIndex < numColumns; colIndex++) {
-      allPositions.push({ row: rowIndex, col: colIndex });
-    }
-  }
-
-  // Shuffle the positions array to randomize activation
-  const shuffledPositions = shuffleArray(allPositions);
-
-  // Take the first `numActive` positions from the shuffled array
-  const wallPositions = shuffledPositions.slice(0, numActive);
-
-  const grid = [];
-  for (let rowIndex = 0; rowIndex < numRows; rowIndex++) {
-    const rowItems = [];
-    for (let colIndex = 0; colIndex < numColumns; colIndex++) {
-      const isWall = wallPositions.some(
-        (position) =>
-          position.row === rowIndex + 1 && position.col === colIndex + 1
-      );
-
-      // Determine if the current BlockButton should be activated based on positions array initialy
-      const isActivated = activePositions?.some(
-        (position) => position.row === rowIndex && position.col === colIndex
-      );
-
-      rowItems.push(
-        <BlockButton
-          type={isWall ? "wall" : "path"}
-          key={`${rowIndex + 1}-${colIndex + 1}`}
-          activated={isActivated}
-          deactivated={deactivatePositions}
-          onChangeValue={(data) => {
-            console.log(rowIndex, colIndex, data);
-          }}
-        />
-      );
+  useEffect(() => {
+    // Generate all possible positions in the grid
+    const allPositions = [];
+    for (let rowIndex = 0; rowIndex < row; rowIndex++) {
+      for (let colIndex = 0; colIndex < col; colIndex++) {
+        allPositions.push({ row: rowIndex, col: colIndex });
+      }
     }
 
-    grid.push(
-      <div key={rowIndex} style={{ display: "flex" }}>
-        {rowItems}
-      </div>
-    );
-  }
+    // Shuffle the positions array to randomize activation
+    const newShuffledPositions = shuffleArray(allPositions).slice(0, numActive);
+    setShuffledPositions(newShuffledPositions);
+
+    // getWallPositions?.(newShuffledPositions);
+  }, [row, col, numActive, deactivatePositions]);
+
+  useEffect(() => {
+    getWallPositions?.(shuffledPositions);
+  }, [shuffledPositions, deactivatePositions]);
 
   return (
     <>
-      <div style={{ display: "flex", flexDirection: "column" }}>{grid}</div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {Array.from({ length: row })?.map((_, rowIndex) => (
+          <div key={rowIndex} style={{ display: "flex" }}>
+            {Array.from({ length: col })?.map((_, colIndex) => {
+              const position = { row: rowIndex, col: colIndex };
+              const isWall = shuffledPositions.some(
+                (wallPosition) =>
+                  wallPosition.row === position.row &&
+                  wallPosition.col === position.col
+              );
+
+              const isActivated = activePositions.some(
+                (activePosition) =>
+                  activePosition.row === position.row &&
+                  activePosition.col === position.col
+              );
+
+              return (
+                <BlockButton
+                  type={isWall ? "wall" : "path"}
+                  key={`${position.row}-${position.col}`}
+                  activated={isActivated}
+                  deactivated={deactivatePositions}
+                  onChangeValue={(data) => onChangeValue(data, position)}
+                />
+              );
+            })}
+          </div>
+        ))}
+      </div>
     </>
   );
 };

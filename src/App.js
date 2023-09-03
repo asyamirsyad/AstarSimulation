@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import Grid from "./components/Grid";
 import Input from "./components/Input";
 import Button from "./components/Button";
@@ -9,12 +8,13 @@ function App() {
   const [col, setCol] = useState(3);
   const [trig, setTrig] = useState({});
   const [deactivated, setDeactivated] = useState(false);
+  const [wall, setWall] = useState([]);
 
   useEffect(() => {
     if (deactivated) {
       setDeactivated(false);
     }
-  }, [trig]);
+  }, [deactivated]);
 
   const handleInputChange = (e, setter) => {
     setter(e.target.value);
@@ -25,8 +25,12 @@ function App() {
     setTrig({ row, col });
   };
 
+  useEffect(() => {
+    console.log(wall);
+  }, [wall]);
+
   return (
-    <div>
+    <div className="col">
       <Input label={"row"} onChange={(e) => handleInputChange(e, setRow)} />
       <Input label={"col"} onChange={(e) => handleInputChange(e, setCol)} />
       <Button onClick={generateMap}>generate map</Button>
@@ -35,6 +39,12 @@ function App() {
         row={trig.row}
         numActive={5}
         deactivatePositions={deactivated}
+        onChangeValue={(data, gridI) => {
+          console.log(data, gridI);
+        }}
+        getWallPositions={(position) => {
+          setWall(position);
+        }}
       />
     </div>
   );
