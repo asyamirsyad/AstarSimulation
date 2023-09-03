@@ -1,8 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+// import 'react-date-range/dist/styles.css'
+// import 'react-date-range/dist/theme/default.css'
+// import 'react-datepicker/dist/react-datepicker.css'
+// import 'react-dates/initialize'
+// import 'react-dates/lib/css/_datepicker.css'
+import './styles/index.scss'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

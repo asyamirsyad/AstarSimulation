@@ -1,3 +1,44 @@
+$primary: #2cb34d;
+$accent: #039dcc;
+$white: #fff;
+// $accent: #4baff0;
+$primary-light: lighten($primary, 20);
+$secondary: #6a7b76;
+// semantic
+$success: #13ce66;
+$info: #2d8eff;
+$warning: #ffc107;
+$danger: #ff4949;
+
+$font-size-root: 14px;
+
+$theme-colors: (
+  'primary': $primary,
+  'accent': $accent,
+  'white': $white,
+  'secondary': $secondary,
+  'primary-light': $primary-light,
+
+  'success': $success,
+  'info': $info,
+  'warning': $warning,
+  'danger': $danger,
+);
+
+$min-contrast-ratio: 1.5 !default;
+
+$font-family-sans-serif: 'Poppins', -apple-system, BlinkMacSystemFont,
+  'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans',
+  sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+  'Noto Color Emoji';
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+);
+
 @import '~bootstrap/scss/mixins/banner';
 @include bsBanner('');
 
@@ -5,19 +46,19 @@
 // Configuration
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/maps';
+// @import '~bootstrap/scss/maps';
 @import '~bootstrap/scss/mixins';
-@import '~bootstrap/scss/utilities';
+// @import '~bootstrap/scss/utilities';
 
 // Layout & components
-@import '~bootstrap/scss/root';
+// @import '~bootstrap/scss/root';
 @import '~bootstrap/scss/reboot';
 @import '~bootstrap/scss/type';
 @import '~bootstrap/scss/images';
 @import '~bootstrap/scss/containers';
-@import '~bootstrap/scss/grid';
+// @import '~bootstrap/scss/grid';
 @import '~bootstrap/scss/tables';
-@import '~bootstrap/scss/forms';
+// @import '~bootstrap/scss/forms';
 @import '~bootstrap/scss/transitions';
 @import '~bootstrap/scss/dropdown';
 @import '~bootstrap/scss/button-group';
@@ -25,7 +66,7 @@
 @import '~bootstrap/scss/navbar';
 @import '~bootstrap/scss/card';
 @import '~bootstrap/scss/buttons';
-@import '~bootstrap/scss/accordion';
+// @import '~bootstrap/scss/accordion';
 @import '~bootstrap/scss/breadcrumb';
 @import '~bootstrap/scss/pagination';
 @import '~bootstrap/scss/badge';
@@ -46,7 +87,38 @@
 @import '~bootstrap/scss/helpers';
 
 // Utilities
-@import '~bootstrap/scss/utilities/api';
+// @import '~bootstrap/scss/utilities/api';
 // scss-docs-end import-stack
 
-@import 'boostraps/big-paddings.scss';
+// @import 'boostraps/big-paddings.scss';
+
+a {
+  text-decoration: none;
+}
+
+.alert-loader {
+  border-color: #2cb34d rgba(0, 0, 0, 0) #2cb34d rgba(0, 0, 0, 0) !important;
+}
+
+.modal {
+  .btn-close {
+    display: none;
+  }
+}
+
+.modal-backdrop {
+  z-index: 1000;
+}
+
+.modal.show {
+  z-index: 1000;
+}
+
+.nav {
+  --bs-nav-tabs-link-active-color: #2cb34d;
+  --bs-nav-link-color: #6a7b76;
+}
+
+.table > :not(caption) > * > * {
+  box-shadow: none;
+}

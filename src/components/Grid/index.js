@@ -65,6 +65,7 @@ const Grid = ({
                 <BlockButton
                   type={isWall ? "wall" : "path"}
                   key={`${position.row}-${position.col}`}
+                  id={position.row / position.col}
                   activated={isActivated}
                   deactivated={deactivatePositions}
                   onChangeValue={(data) => onChangeValue(data, position)}
