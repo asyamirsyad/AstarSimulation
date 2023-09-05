@@ -5,6 +5,7 @@ import Button from "./components/Button";
 import { Container } from "react-bootstrap";
 import Navbar from "./components/NavBar";
 import { astar } from "./functions/AStar";
+import { aStarSearch } from "./functions/tes";
 
 function App() {
   const [gridParams, setGridParams] = useState({
@@ -37,22 +38,29 @@ function App() {
     const totalWall = (parseInt(row) * parseInt(col) * parseInt(wallQty)) / 100;
     setDeactivated(true);
     setStartEnd([]);
+    setPath([]);
     setGridVessel({ ...gridParams, wallQty: parseInt(totalWall) });
   };
 
   useEffect(() => {
     let startEndIdx;
+    let rowCol;
+    let finalPath;
 
     if (startEnd?.length === 2) {
       startEndIdx = startEnd;
-      
-      astar({
+      rowCol = { row: gridVessel?.row, col: gridVessel?.col };
+
+      const f = astar({
         start_node: startEndIdx[0],
         end_node: startEndIdx[1],
         walls: wall,
         totalCol: gridVessel?.col,
         totalRow: gridVessel?.row,
       });
+
+      finalPath = aStarSearch(f?.map, f?.scr, f?.dest, rowCol);
+      setPath(finalPath[0]);
     }
 
     if (startEnd?.length > 2) {
@@ -60,6 +68,8 @@ function App() {
       setDeactivated(true);
     }
   }, [wall, startEnd]);
+
+  console.log("path", path);
 
   return (
     <>
@@ -92,6 +102,7 @@ function App() {
           col={gridVessel.col}
           row={gridVessel.row}
           numActive={gridVessel.wallQty}
+          activePositions={path}
           deactivatePositions={deactivated}
           onChangeValue={(data, gridI) => {
             setStartEnd((prev) => {
