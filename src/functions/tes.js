@@ -34,7 +34,7 @@ function calculateHValue(row, col, dest) {
 //   return Math.abs(row - dest?.row) + Math.abs(col - dest?.col);
 // }
 
-function tracePath(cellDetails, dest) {
+function tracePath(cellDetails, dest, rowCol) {
   console.log("The Path is ");
   let row = dest?.row;
   let col = dest?.col;
@@ -60,8 +60,8 @@ function tracePath(cellDetails, dest) {
     let p = Path[0];
     Path.shift();
 
-    if (p[0] == 2 || p[0] == 1) {
-      finalPath?.push({ row: p[0], col: p[1] - 1 });
+    if (0 <= p[0] < rowCol?.row && 0 <= p[1] < rowCol?.col) {
+      finalPath?.push({ row: p[0], col: p[1] });
     } else {
       finalPath?.push({ row: p[0], col: p[1] });
     }
@@ -152,7 +152,7 @@ export function aStarSearch(grid, src, dest, rowCol) {
           cellDetails[ni][nj].parent_i = i;
           cellDetails[ni][nj].parent_j = j;
           console.log("The destination cell is found\n");
-          finalPath?.push(tracePath(cellDetails, dest));
+          finalPath?.push(tracePath(cellDetails, dest, rowCol));
           foundDest = true;
           return true;
         } else if (!closedList[ni][nj] && isUnBlocked(grid, ni, nj)) {
