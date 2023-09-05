@@ -39,22 +39,17 @@ export function astar({
   const currentPosition = {};
 
   for (let r = 0; r < totalRow; r++) {
+    const availableRow = [];
     for (let c = 0; c < totalCol; c++) {
       const isWall = walls.some(({ row, col }) => row === r && col === c);
-      availablePath.push(isWall ? [0] : [1]);
+      availableRow?.push(isWall ? 0 : 1);
     }
+    availablePath?.push(availableRow);
   }
 
-  // for (let r = 0; r < totalRow; r++) {
-  //   for (let c = 0; c < totalCol; c++) {
-  //     position = start_node;
-  //     const aStar = euclidean({ node: position, end_node: end_node });
-  //     tesr?.push(aStar);
-  //   }
-  // }
-
   console.log(availablePath);
-  // console.log(tesc);
+  console.log(walls);
+  console.log(start_node, end_node);
 }
 
 // export function astar({ start_node, end_node, walls }) {
