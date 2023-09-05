@@ -1,17 +1,23 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "./components/Grid";
 import Input from "./components/Input";
 import Button from "./components/Button";
-import { Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import Navbar from "./components/NavBar";
+import { astar } from "./functions/AStar";
 
 function App() {
-  const [row, setRow] = useState(3);
-  const [col, setCol] = useState(3);
-  const [trig, setTrig] = useState({});
+  const [gridParams, setGridParams] = useState({
+    row: 3,
+    col: 3,
+    wallQty: 0,
+  });
   const [deactivated, setDeactivated] = useState(false);
+  const [gridVessel, setGridVessel] = useState({});
+  const [startEnd, setStartEnd] = useState([]);
   const [wall, setWall] = useState([]);
-  const [wallQty, setWallQty] = useState();
+  // const [varAstar, setVarAstar] = useState({});
+  const [path, setPath] = useState([]);
 
   useEffect(() => {
     if (deactivated) {
@@ -19,39 +25,81 @@ function App() {
     }
   }, [deactivated]);
 
-  const handleInputChange = (e, setter) => {
-    setter(e.target.value);
+  const handleInputChange = (e, key) => {
+    setGridParams({
+      ...gridParams,
+      [key]: e.target.value,
+    });
   };
 
   const generateMap = () => {
+    const { row, col, wallQty } = gridParams;
+    const totalWall = (parseInt(row) * parseInt(col) * parseInt(wallQty)) / 100;
     setDeactivated(true);
-    setTrig({ row, col, wallQty });
+    setStartEnd([]);
+    setGridVessel({ ...gridParams, wallQty: parseInt(totalWall) });
   };
 
   useEffect(() => {
-    console.log(wall);
-  }, [wall]);
+    let startEndIdx;
+
+    if (startEnd?.length === 2) {
+      startEndIdx = startEnd;
+      
+      astar({
+        start_node: startEndIdx[0],
+        end_node: startEndIdx[1],
+        walls: wall,
+        totalCol: gridVessel?.col,
+        totalRow: gridVessel?.row,
+      });
+    }
+
+    if (startEnd?.length > 2) {
+      setStartEnd([]);
+      setDeactivated(true);
+    }
+  }, [wall, startEnd]);
 
   return (
     <>
       <Navbar title={"A* Simulation"} />
       <Container fluid>
-        <Input label={"row"} onChange={(e) => handleInputChange(e, setRow)} />
-        <Input label={"col"} onChange={(e) => handleInputChange(e, setCol)} />
+        <Input
+          label={"row"}
+          onChange={(e) => handleInputChange(e, "row")}
+          type={"number"}
+          value={gridParams.row}
+        />
+        <Input
+          label={"col"}
+          onChange={(e) => handleInputChange(e, "col")}
+          type={"number"}
+          value={gridParams.col}
+        />
         <Input
           label={"wall"}
-          onChange={(e) => handleInputChange(e, setWallQty)}
+          onChange={(e) => handleInputChange(e, "wallQty")}
+          type={"number"}
+          placeholder={"%"}
+          suffix={"%"}
+          value={gridParams.wallQty}
         />
         <Button onClick={generateMap} style={{ marginBlock: 4 }}>
           generate map
         </Button>
         <Grid
-          col={trig.col}
-          row={trig.row}
-          numActive={trig.wallQty}
+          col={gridVessel.col}
+          row={gridVessel.row}
+          numActive={gridVessel.wallQty}
           deactivatePositions={deactivated}
           onChangeValue={(data, gridI) => {
-            console.log(data, gridI);
+            setStartEnd((prev) => {
+              if (data) {
+                return [...prev, gridI];
+              }
+              return prev;
+            });
           }}
           getWallPositions={(position) => {
             setWall(position);
