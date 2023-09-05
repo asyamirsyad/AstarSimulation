@@ -34,7 +34,7 @@ export function astar({
   totalRow,
   totalCol,
 }) {
-  const availablePath = [];
+  const map = [];
 
   const currentPosition = {};
 
@@ -44,83 +44,12 @@ export function astar({
       const isWall = walls.some(({ row, col }) => row === r && col === c);
       availableRow?.push(isWall ? 0 : 1);
     }
-    availablePath?.push(availableRow);
+    map?.push(availableRow);
   }
 
-  console.log(availablePath);
-  console.log(walls);
-  console.log(start_node, end_node);
+  // console.log(map);
+  // console.log(walls);
+  // console.log(start_node, end_node);
+
+  return { map: map, scr: start_node, dest: end_node };
 }
-
-// export function astar({ start_node, end_node, walls }) {
-//   const openSet = [start_node];
-//   const closedSet = new Set();
-//   const cameFrom = {};
-
-//   //   console.log(openSet);
-
-//   const gScore = {};
-//   const fScore = {};
-
-//   gScore[start_node] = 0;
-//   fScore[start_node] = heuristic({ node: start_node, end_node: end_node });
-
-//   //   console.log(fScore[start_node]);
-
-//   while (openSet?.length > 0) {
-//     openSet?.sort((a, b) => fScore[a] - fScore[b]);
-//     const current = openSet?.shift();
-
-//     if (areObjectsEqual(current, end_node)) {
-//       // if (current === end_node) {
-//       // Reconstruct the path from end to start
-//       const path = [];
-//       let node = current;
-//       while (node) {
-//         path?.unshift(node);
-//         node = cameFrom[node];
-//       }
-//       console.log(path);
-//       return path;
-//     }
-
-//     closedSet?.add(current);
-
-//     const neighbors = [
-//       { row: current?.row - 1, col: current?.col }, // Up
-//       { row: current?.row + 1, col: current?.col }, // Down
-//       { row: current?.row, col: current?.col - 1 }, // Left
-//       { row: current?.row, col: current?.col + 1 }, // Right
-//     ];
-
-//     for (const neighbor of neighbors) {
-//       if (
-//         walls?.some(
-//           (wall) => wall?.row === neighbor?.row && wall?.col === neighbor?.col
-//         )
-//       ) {
-//         continue; // Skip walls
-//       }
-
-//       if (!closedSet?.has(neighbor)) {
-//         const tentativeGScore = gScore[current] + 1; // Assuming each move has a cost of 1
-
-//         if (
-//           !openSet?.includes(neighbor) ||
-//           tentativeGScore < gScore[neighbor]
-//         ) {
-//           cameFrom[neighbor] = current;
-//           gScore[neighbor] = tentativeGScore;
-//           fScore[neighbor] = gScore[neighbor] + heuristic(neighbor, end_node);
-
-//           if (!openSet?.includes(neighbor)) {
-//             openSet?.push(neighbor);
-//           }
-//         }
-//       }
-//     }
-//     break;
-//   }
-
-//   return null; // No path found
-// }
