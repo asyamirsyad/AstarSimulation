@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BlockButton from "../BlockButton";
 
 function shuffleArray(array) {
@@ -12,13 +12,14 @@ function shuffleArray(array) {
 }
 
 const Grid = ({
-  row = 2,
-  col = 2,
+  row = 3,
+  col = 3,
   numActive = 0,
   activePositions = [],
   deactivatePositions = false,
-  onChangeValue = () => {},
   getWallPositions = () => {},
+  onChangeValue = () => {},
+  onTrigger = false,
   ...props
 }) => {
   const [shuffledPositions, setShuffledPositions] = useState([]);
@@ -32,12 +33,9 @@ const Grid = ({
       }
     }
 
-    // Shuffle the positions array to randomize activation
     const newShuffledPositions = shuffleArray(allPositions).slice(0, numActive);
     setShuffledPositions(newShuffledPositions);
-
-    // getWallPositions?.(newShuffledPositions);
-  }, [row, col, numActive, deactivatePositions]);
+  }, [row, col, numActive, onTrigger]);
 
   useEffect(() => {
     getWallPositions?.(shuffledPositions);

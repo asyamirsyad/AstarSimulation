@@ -1,5 +1,12 @@
 // A javascript Program to implement A* Search Algorithm
 import { Component } from "react";
+import {
+  calculateHValue,
+  isDestination,
+  isUnBlocked,
+  isValid,
+  tracePath,
+} from "./AStar";
 
 class cell extends Component {
   constructor(props) {
@@ -12,65 +19,7 @@ class cell extends Component {
   }
 }
 
-function isValid(row, col, rowCol) {
-  return row >= 0 && row < rowCol?.row && col >= 0 && col < rowCol.col;
-}
-
-function isUnBlocked(grid, row, col) {
-  if (grid[row][col] === 1) return true;
-  else return false;
-}
-
-function isDestination(row, col, dest) {
-  if (row == dest?.row && col == dest?.col) return true;
-  else return false;
-}
-
-function calculateHValue(row, col, dest) {
-  return Math.sqrt(Math.pow(row - dest?.row, 2) + Math.pow(col - dest?.col, 2));
-}
-
-// function calculateHValue(row, col, dest) {
-//   return Math.abs(row - dest?.row) + Math.abs(col - dest?.col);
-// }
-
-function tracePath(cellDetails, dest, rowCol) {
-  console.log("The Path is ");
-  let row = dest?.row;
-  let col = dest?.col;
-
-  let Path = [];
-  let finalPath = [];
-
-  while (
-    !(
-      cellDetails[row][col].parent_i == row &&
-      cellDetails[row][col].parent_j == col
-    )
-  ) {
-    Path.push([row, col]);
-    let temp_row = cellDetails[row][col].parent_i;
-    let temp_col = cellDetails[row][col].parent_j;
-    row = temp_row;
-    col = temp_col;
-  }
-
-  Path.push([row, col]);
-  while (Path.length > 0) {
-    let p = Path[0];
-    Path.shift();
-
-    if (0 <= p[0] < rowCol?.row && 0 <= p[1] < rowCol?.col) {
-      finalPath?.push({ row: p[0], col: p[1] });
-    } else {
-      finalPath?.push({ row: p[0], col: p[1] });
-    }
-  }
-  // console.log(finalPath);
-  return finalPath;
-}
-
-export function aStarSearch(grid, src, dest, rowCol) {
+export function aStarSearch(grid, src, dest, rowCol, methodH, limitMove) {
   if (isValid(src?.row, src?.col, rowCol) == false) {
     console.log("Source is invalid\n");
     return;
@@ -147,8 +96,8 @@ export function aStarSearch(grid, src, dest, rowCol) {
       const ni = i + dx;
       const nj = j + dy;
 
-      if (isValid(ni, nj, rowCol)) {
-        if (isDestination(ni, nj, dest)) {
+      if (isValid(ni, nj, rowCol) === true) {
+        if (isDestination(ni, nj, dest) === true) {
           cellDetails[ni][nj].parent_i = i;
           cellDetails[ni][nj].parent_j = j;
           console.log("The destination cell is found\n");
@@ -157,7 +106,7 @@ export function aStarSearch(grid, src, dest, rowCol) {
           return true;
         } else if (!closedList[ni][nj] && isUnBlocked(grid, ni, nj)) {
           const gNew = cellDetails[i][j].g + (dx === 0 || dy === 0 ? 1 : 1.414);
-          const hNew = calculateHValue(ni, nj, dest);
+          const hNew = calculateHValue(ni, nj, dest, methodH);
           const fNew = gNew + hNew;
 
           if (
@@ -178,20 +127,44 @@ export function aStarSearch(grid, src, dest, rowCol) {
       return false;
     }
 
+    // if (
+    //   processSuccessor(-1, 0) || // North
+    //   processSuccessor(1, 0) || // South
+    //   processSuccessor(0, 1) || // East
+    //   processSuccessor(0, -1) || // West
+    //   processSuccessor(-1, 1) || // North-East
+    //   processSuccessor(-1, -1) || // North-West
+    //   processSuccessor(1, 1) || // South-East
+    //   processSuccessor(1, -1) // South-West
+    // ) {
+    //   return finalPath;
+    // }
+
     if (
+      !limitMove &&
+      (processSuccessor(-1, 0) || // North
+        processSuccessor(1, 0) || // South
+        processSuccessor(0, 1) || // East
+        processSuccessor(0, -1) || // West
+        processSuccessor(-1, 1) || // North-East
+        processSuccessor(-1, -1) || // North-West
+        processSuccessor(1, 1) || // South-East
+        processSuccessor(1, -1)) // South-West
+    ) {
+      return finalPath;
+    } else if (
       processSuccessor(-1, 0) || // North
       processSuccessor(1, 0) || // South
       processSuccessor(0, 1) || // East
-      processSuccessor(0, -1) || // West
-      processSuccessor(-1, 1) || // North-East
-      processSuccessor(-1, -1) || // North-West
-      processSuccessor(1, 1) || // South-East
-      processSuccessor(1, -1) // South-West
+      processSuccessor(0, -1)
     ) {
       return finalPath;
     }
   }
-  if (foundDest == false) console.log("Failed to find the Destination Cell\n");
+  if (foundDest === false) {
+    alert("Failed to find the Destination Cell\n");
+    return false;
+  }
 
   return;
 }
