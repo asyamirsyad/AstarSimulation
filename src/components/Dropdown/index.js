@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
+import "./style.scss";
 
-const Drop = ({ label = "", options = [], onSelect, ...props }) => {
+const Drop = ({ label = "", options = [], onSelect, setLabel, ...props }) => {
   const [initialLabel, setInitialLabel] = useState(label);
 
   const handleSelect = (value) => {
@@ -12,7 +13,7 @@ const Drop = ({ label = "", options = [], onSelect, ...props }) => {
   return (
     <Dropdown onSelect={handleSelect} {...props}>
       <Dropdown.Toggle style={{ width: "100%" }}>
-        {initialLabel}
+        {setLabel || initialLabel}
       </Dropdown.Toggle>
 
       <Dropdown.Menu

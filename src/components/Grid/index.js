@@ -43,6 +43,25 @@ const Grid = ({
 
   return (
     <>
+      <div className="d-flex">
+        {Array.from({ length: col })?.map((_, colIndex) => {
+          return (
+            <div
+              style={{
+                marginLeft: colIndex === 0 ? 24 : 0,
+                width: 26,
+                height: 24,
+                border: "1px solid transparent",
+                display: "flex",
+                justifyContent: "center",
+                fontFamily: "monospace",
+              }}
+            >
+              {colIndex}
+            </div>
+          );
+        })}
+      </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
         {Array.from({ length: row })?.map((_, rowIndex) => (
           <div key={rowIndex} style={{ display: "flex" }}>
@@ -61,15 +80,31 @@ const Grid = ({
               );
 
               return (
-                <BlockButton
-                  type={isWall ? "wall" : "path"}
-                  key={`${position?.row}-${position?.col}`}
-                  id={`${(position?.row, position?.col)}`}
-                  activated={isActivated}
-                  deactivated={deactivatePositions}
-                  onChangeValue={(data) => onChangeValue(data, position)}
-                  {...props}
-                />
+                <React.Fragment key={`${(position?.row, position?.col)}`}>
+                  {colIndex - 1 < 0 && (
+                    <div
+                      style={{
+                        width: 24,
+                        height: 24,
+                        border: "1px solid transparent",
+                        display: "flex",
+                        justifyContent: "center",
+                        fontFamily: "monospace",
+                      }}
+                    >
+                      {rowIndex}
+                    </div>
+                  )}
+                  <BlockButton
+                    type={isWall ? "wall" : "path"}
+                    key={`${position?.row}-${position?.col}`}
+                    id={`${(position?.row, position?.col)}`}
+                    activated={isActivated}
+                    deactivated={deactivatePositions}
+                    onChangeValue={(data) => onChangeValue(data, position)}
+                    {...props}
+                  />
+                </React.Fragment>
               );
             })}
           </div>
