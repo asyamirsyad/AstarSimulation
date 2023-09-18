@@ -6,7 +6,7 @@ import {
   isUnBlocked,
   isValid,
   tracePath,
-} from './helpers';
+} from "./helpers";
 import Swal from "sweetalert2";
 
 class cell extends Component {
@@ -58,21 +58,21 @@ export function aStarSearch(grid, src, dest, rowCol, methodH, limitMove) {
 
   for (i = 0; i < rowCol?.row; i++) {
     for (j = 0; j < rowCol?.col; j++) {
-      cellDetails[i][j] = new cell();
-      cellDetails[i][j].f = 2147483647;
-      cellDetails[i][j].g = 2147483647;
-      cellDetails[i][j].h = 2147483647;
-      cellDetails[i][j].parent_i = -1;
-      cellDetails[i][j].parent_j = -1;
+      cellDetails[i][j] = new cell(); // Inisialisasi elemen array cellDetails
+      cellDetails[i][j].g = 0;
+      cellDetails[i][j].h = 0;
+      cellDetails[i][j].f = 0;
+      cellDetails[i][j].parent_i = i;
+      cellDetails[i][j].parent_j = j;
     }
   }
 
   // Initialising the parameters of the starting node
   i = src?.row;
   j = src?.col;
-  cellDetails[i][j].f = 0;
   cellDetails[i][j].g = 0;
   cellDetails[i][j].h = 0;
+  cellDetails[i][j].f = 0;
   cellDetails[i][j].parent_i = i;
   cellDetails[i][j].parent_j = j;
 
@@ -111,18 +111,15 @@ export function aStarSearch(grid, src, dest, rowCol, methodH, limitMove) {
           const fNew = gNew + hNew;
           // console.log(j, i, fNew);
 
-          if (
-            cellDetails[ni][nj].f == 2147483647 ||
-            cellDetails[ni][nj].f > fNew
-          ) {
-            openList.set(fNew, [ni, nj]);
-
-            // Update the details of this cell
+          if (cellDetails[ni][nj].f == 0 || cellDetails[ni][nj].f > fNew) {
+            // Update detail sel
             cellDetails[ni][nj].f = fNew;
             cellDetails[ni][nj].g = gNew;
             cellDetails[ni][nj].h = hNew;
             cellDetails[ni][nj].parent_i = i;
             cellDetails[ni][nj].parent_j = j;
+
+            openList.set(fNew, [ni, nj]);
           }
         }
       }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { mapping } from "../../functions/helpers";
-import { aStarSearch } from "../../functions/astar";
+import { aStarSearch } from "../../functions/AStar";
 import Input from "../../components/Input";
 import Drop from "../../components/Dropdown";
 import { CheckBox } from "../../components/CheckBox";
@@ -210,6 +210,16 @@ function GridContainer({
           setWall(position);
         }}
       />
+      <div style={{ marginTop: "20px" }}>
+        <h3>Path Details</h3>
+        <ul>
+          {path.map((position, index) => (
+            <li key={index}>
+              Row: {position.row}, Col: {position.col}, f: {position.f}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

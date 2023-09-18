@@ -51,13 +51,13 @@ export function tracePath(cellDetails, dest, rowCol) {
       cellDetails[row][col].parent_j == col
     )
   ) {
-    Path.push([row, col, f]);
     let temp_row = cellDetails[row][col].parent_i;
     let temp_col = cellDetails[row][col].parent_j;
     let temp_f = cellDetails[row][col].f;
+    f = temp_f;
+    Path.push([row, col, f]);
     row = temp_row;
     col = temp_col;
-    f = temp_f;
   }
 
   Path.push([row, col, f]);
@@ -67,9 +67,9 @@ export function tracePath(cellDetails, dest, rowCol) {
     console.log(p);
 
     if (0 <= p[0] < rowCol?.row && 0 <= p[1] < rowCol?.col) {
-      finalPath?.push({ row: p[0], col: p[1] });
+      finalPath?.push({ row: p[0], col: p[1], f: p[2] }); // Menambahkan nilai f ke dalam finalPath
     } else {
-      finalPath?.push({ row: p[0], col: p[1] });
+      finalPath?.push({ row: p[0], col: p[1], f: p[2] }); // Menambahkan nilai f ke dalam finalPath
     }
   }
 
